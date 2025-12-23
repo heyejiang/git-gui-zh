@@ -2,6 +2,13 @@ name: Build and Export
 
 on:
   workflow_dispatch:
+    inputs:
+      git_version:
+        description: 'Git version to build (e.g., 2.52.0.windows.1)'
+        required: true
+        default: '2.52.0.windows.1'
+        type: string
+
 
 jobs:
   build:
@@ -22,9 +29,10 @@ jobs:
 
     - name: Run the build script
       env:
-        # https://github.com/git-for-windows/git/archive/refs/tags/v2.47.0.windows.2.tar.gz
-        # Settings -> Secrets and variables -> Actions 添加一个变量 GIT_VERSION 并指定版本号，如：2.48.1.windows.1
-        GIT_VERSION: ${{ secrets.GIT_VERSION }}
+        # https://github.com/git-for-windows/git/archive/refs/tags/v2.52.0.windows.1.tar.gz
+        # Settings -> Secrets and variables -> Actions 添加一个变量 GIT_VERSION 并指定版本号，如：2.52.0.windows.1
+        # GIT_VERSION: ${{ secrets.GIT_VERSION }}
+        GIT_VERSION: ${{ github.event.inputs.git_version }}
       run: |
         chmod +x ./build.sh
         ./build.sh ${{ env.GIT_VERSION }}
@@ -34,3 +42,4 @@ jobs:
       with:
         name: ${{ env.ZIP_FILE }}
         path: ${{ env.ZIP_FILE }}
+
